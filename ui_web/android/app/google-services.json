@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "385768025194",
+    "project_id": "fresh-shop-8b4eb",
+    "storage_bucket": "fresh-shop-8b4eb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:385768025194:android:762ddc9b105b34aabd6e13",
+        "android_client_info": {
+          "package_name": "com.example.ui_web"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3cDKGNknbMcqPYZ7rqv-ugH8dBIROqQE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
