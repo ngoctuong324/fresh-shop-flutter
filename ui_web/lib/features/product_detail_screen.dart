@@ -5,7 +5,7 @@ import 'package:ui_web/common/constants.dart';
 import 'package:ui_web/data/model/product.dart';
 
 class ProductDetailScreen extends StatefulWidget {
-  final Grocery product;
+  final Product product;
   const ProductDetailScreen({super.key, required this.product});
 
   @override

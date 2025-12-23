@@ -37,7 +37,7 @@ class _LogInState extends State<LogIn> {
       if (!mounted) return;
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const BottomNavBar()),
+        MaterialPageRoute(builder: (_) => const BottomNavigation()),
       );
     } on FirebaseAuthException catch (e) {
       String message = "Sai email hoặc mật khẩu";

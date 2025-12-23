@@ -1,65 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:ui_web/common/constants.dart';
 import 'package:ui_web/features/onboarding/home/home_screen_grocery.dart';
 
-class BottomNavBar extends StatefulWidget {
-  const BottomNavBar({super.key});
+class BottomNavigation extends StatefulWidget {
+  const BottomNavigation({super.key});
 
   @override
-  State<BottomNavBar> createState() => _BottomNavBarState();
+  State<BottomNavigation> createState() => _BottomNavigationState();
 }
 
-class _BottomNavBarState extends State<BottomNavBar> {
-  int currentIndex = 0;
-  final List<Widget> pages = [
-    const HomeScreenGrocery(),
-    const Center(child: Text("Data")),
-    const HomeScreenGrocery(),
-    const Center(child: Text("Mail")),
-    const Center(child: Text("Profile")),
+class _BottomNavigationState extends State<BottomNavigation> {
+  int _index = 0;
+  final List<Widget> _pages = const [
+    HomeScreenGrocery(),
+    Center(child: Text('Cart')),
+    Center(child: Text('Favorite')),
+    Center(child: Text('Profile')),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: pages[currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.black12,
-        type: BottomNavigationBarType.fixed,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        currentIndex: currentIndex,
-        onTap: (value) {
+      backgroundColor: backgroundColor,
+      body: _pages[_index],
+
+      bottomNavigationBar: CurvedNavigationBar(
+        index: _index,
+        height: 60,
+        backgroundColor: backgroundColor,
+        color: textGreen,
+        buttonBackgroundColor: textGreen,
+        animationDuration: const Duration(milliseconds: 300),
+        items: const [
+          Icon(Icons.home, color: Colors.white),
+          Icon(Icons.shopping_cart_outlined, color: Colors.white),
+          Icon(Icons.favorite_border, color: Colors.white),
+          Icon(Icons.person_outline, color: Colors.white),
+        ],
+        onTap: (index) {
           setState(() {
-            currentIndex = value;
+            _index = index;
           });
         },
-        items: [
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.home_rounded),
-            label: '',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.insert_chart),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Container(
-              padding: const EdgeInsets.all(15),
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.green,
-              ),
-              child: const Icon(Icons.qr_code_scanner, color: Colors.white),
-            ),
-            label: '',
-          ),
-          const BottomNavigationBarItem(icon: Icon(Icons.mail), label: ''),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: '',
-          ),
-        ],
       ),
     );
   }
