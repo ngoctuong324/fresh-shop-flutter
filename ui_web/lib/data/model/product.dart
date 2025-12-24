@@ -4,7 +4,7 @@ class Product {
   final String image;
   String get assetImage => 'assets/images/$image';
   final String category;
-  final int price;
+  final double price;
   final String unit;
   final double rate;
   final bool isRecent;

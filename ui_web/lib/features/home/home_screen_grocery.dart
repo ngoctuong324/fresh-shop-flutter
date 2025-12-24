@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ui_web/common/constants.dart';
 import 'home_controller.dart';
-import 'components/home_header.dart';
-import 'components/search_box.dart';
-import 'components/category_bar.dart';
-import 'components/product_grid.dart';
-import 'components/recent_shop_list.dart';
+import 'widgets/home_header.dart';
+import 'widgets/search_box.dart';
+import 'widgets/category_bar.dart';
+import 'widgets/product_grid.dart';
+import 'widgets/recent_shop_list.dart';
 
 class HomeScreenGrocery extends StatelessWidget {
   const HomeScreenGrocery({super.key});

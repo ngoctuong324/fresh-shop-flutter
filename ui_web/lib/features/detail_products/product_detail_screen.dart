@@ -3,7 +3,6 @@ import 'package:ui_web/data/model/product.dart';
 import 'widgets/product_header.dart';
 import 'widgets/product_info_section.dart';
 import 'widgets/add_to_cart_bar.dart';
-import 'package:ui_web/common/constants.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final Product product;
@@ -19,7 +18,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.transparent,
       appBar: ProductHeader.appBar(context, widget.product),
       body: SingleChildScrollView(
         child: Column(

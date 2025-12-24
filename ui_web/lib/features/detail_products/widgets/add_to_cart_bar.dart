@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:ui_web/data/model/product.dart';
 import 'package:ui_web/common/constants.dart';
+import 'package:ui_web/features/cart/cart_controller.dart';
 
 class AddToCartBar extends StatelessWidget {
   final Product product;
@@ -39,12 +41,15 @@ class AddToCartBar extends StatelessWidget {
                 ],
               ),
             ),
+
             const Spacer(),
-            const SizedBox(width: 10),
+
             Padding(
               padding: const EdgeInsets.only(right: 20),
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  context.read<CartController>().addProduct(product, quantity);
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,
                   shadowColor: Colors.transparent,

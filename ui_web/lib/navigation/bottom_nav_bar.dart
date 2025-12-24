@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:ui_web/common/constants.dart';
-import 'package:ui_web/features/onboarding/home/home_screen_grocery.dart';
+import 'package:ui_web/features/home/home_screen_grocery.dart';
 
 class BottomNavigation extends StatefulWidget {
   const BottomNavigation({super.key});

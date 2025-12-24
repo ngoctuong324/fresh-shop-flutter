@@ -1,54 +1,51 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:ui_web/features/onboarding/auth/auth_service.dart';
-import 'package:ui_web/features/onboarding/auth/login_page.dart';
+import 'package:ui_web/features/auth/auth_service.dart';
+import 'package:ui_web/features/auth/signup.dart';
+import 'package:ui_web/navigation/bottom_nav_bar.dart';
 
-class SignUp extends StatefulWidget {
-  const SignUp({super.key});
+class LogIn extends StatefulWidget {
+  const LogIn({super.key});
 
   @override
-  State<SignUp> createState() => _SignUpState();
+  State<LogIn> createState() => _LogInState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _LogInState extends State<LogIn> {
   final _formKey = GlobalKey<FormState>();
   final _authService = AuthService();
 
-  final TextEditingController nameController = TextEditingController();
   final TextEditingController mailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   bool _isLoading = false;
 
-  Future<void> _register() async {
+  Future<void> _login() async {
     if (_isLoading) return;
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isLoading = true);
 
     try {
-      final user = await _authService.signUp(
+      final user = await _authService.signIn(
         email: mailController.text.trim(),
         password: passwordController.text.trim(),
       );
 
       if (user == null) throw Exception();
 
-      await user.updateDisplayName(nameController.text.trim());
-      await user.reload();
-
       if (!mounted) return;
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const LogIn()),
+        MaterialPageRoute(builder: (_) => const BottomNavigation()),
       );
     } on FirebaseAuthException catch (e) {
-      String message = "Đăng ký thất bại";
+      String message = "Sai email hoặc mật khẩu";
 
-      if (e.code == 'weak-password') {
-        message = "Mật khẩu quá yếu";
-      } else if (e.code == 'email-already-in-use') {
-        message = "Email đã tồn tại";
+      if (e.code == 'user-not-found') {
+        message = "Không tìm thấy tài khoản";
+      } else if (e.code == 'wrong-password') {
+        message = "Mật khẩu không đúng";
       }
 
       ScaffoldMessenger.of(
@@ -92,7 +89,8 @@ class _SignUpState extends State<SignUp> {
         child: Column(
           children: [
             Image.asset("assets/images/login.png", fit: BoxFit.cover),
-            const SizedBox(height: 17),
+
+            const SizedBox(height: 30),
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 45),
@@ -100,15 +98,6 @@ class _SignUpState extends State<SignUp> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    _buildInput(
-                      controller: nameController,
-                      hint: "Name",
-                      validator: (v) =>
-                          v == null || v.isEmpty ? "Nhập tên" : null,
-                    ),
-
-                    const SizedBox(height: 25),
-
                     _buildInput(
                       controller: mailController,
                       hint: "Email",
@@ -126,10 +115,10 @@ class _SignUpState extends State<SignUp> {
                           v == null || v.isEmpty ? "Nhập mật khẩu" : null,
                     ),
 
-                    const SizedBox(height: 25),
+                    const SizedBox(height: 30),
 
                     GestureDetector(
-                      onTap: _register,
+                      onTap: _login,
                       child: Container(
                         width: double.infinity,
                         padding: const EdgeInsets.symmetric(vertical: 13),
@@ -139,7 +128,7 @@ class _SignUpState extends State<SignUp> {
                         ),
                         child: Center(
                           child: Text(
-                            _isLoading ? "Signing up..." : "Sign Up",
+                            _isLoading ? "Signing in..." : "Sign In",
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 22,
@@ -159,16 +148,16 @@ class _SignUpState extends State<SignUp> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text("Already have an account? "),
+                const Text("Don't have an account? "),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const LogIn()),
+                      MaterialPageRoute(builder: (_) => const SignUp()),
                     );
                   },
                   child: const Text(
-                    "Log In",
+                    "Sign Up",
                     style: TextStyle(
                       color: const Color.fromARGB(255, 55, 189, 55),
                       fontWeight: FontWeight.bold,

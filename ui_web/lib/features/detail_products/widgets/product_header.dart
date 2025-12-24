@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ui_web/data/model/product.dart';
+import 'package:ui_web/features/cart/cart_screen.dart';
 
 class ProductHeader extends StatelessWidget {
   final Product product;
@@ -16,7 +17,12 @@ class ProductHeader extends StatelessWidget {
       ),
       actions: [
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const CartScreen()),
+            );
+          },
           icon: Icon(Icons.shopping_cart_outlined, color: themeColor),
         ),
         const SizedBox(width: 10),
@@ -48,7 +54,7 @@ class ProductHeader extends StatelessWidget {
       clipBehavior: Clip.none,
       children: [
         Container(
-          height: 300,
+          height: 360,
           width: size.width,
           decoration: BoxDecoration(
             color: themeColor.withOpacity(0.15),
