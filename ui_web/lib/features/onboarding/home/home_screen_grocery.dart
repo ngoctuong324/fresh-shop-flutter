@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ui_web/common/constants.dart';
@@ -13,28 +14,42 @@ class HomeScreenGrocery extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+    final name = user?.displayName ?? "User";
+
     return ChangeNotifierProvider(
-      create: (_) => HomeController(),
+      create: (_) {
+        final controller = HomeController();
+        controller.loadProducts();
+        return controller;
+      },
       child: Scaffold(
         backgroundColor: backgroundColor,
         body: SafeArea(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                HomeHeader(),
-                SizedBox(height: 24),
-                SearchBox(),
-                SizedBox(height: 20),
-                CategoryBar(),
-                SizedBox(height: 16),
-                ProductGrid(),
-                SizedBox(height: 28),
-                RecentShopList(),
-                SizedBox(height: 24),
-              ],
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              HomeHeader(userName: name),
+              const SizedBox(height: 24),
+              const SearchBox(),
+              const SizedBox(height: 20),
+              const Expanded(
+                child: SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CategoryBar(),
+                      SizedBox(height: 16),
+                      ProductGrid(),
+                      SizedBox(height: 28),
+                      RecentShopList(),
+                      SizedBox(height: 24),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

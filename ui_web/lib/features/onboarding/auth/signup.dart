@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ui_web/features/onboarding/auth/auth_service.dart';
 import 'package:ui_web/features/onboarding/auth/login_page.dart';
-import 'package:ui_web/features/onboarding/home/home_screen_grocery.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -35,10 +34,13 @@ class _SignUpState extends State<SignUp> {
 
       if (user == null) throw Exception();
 
+      await user.updateDisplayName(nameController.text.trim());
+      await user.reload();
+
       if (!mounted) return;
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const HomeScreenGrocery()),
+        MaterialPageRoute(builder: (_) => const LogIn()),
       );
     } on FirebaseAuthException catch (e) {
       String message = "Đăng ký thất bại";

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ui_web/common/constants.dart';
-import 'package:ui_web/features/product_detail_screen.dart';
+import 'package:ui_web/features/detail_products/product_detail_screen.dart';
 import 'package:ui_web/navigation/product_items_display.dart';
 import '../home_controller.dart';
 

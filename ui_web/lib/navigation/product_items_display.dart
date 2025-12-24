@@ -23,7 +23,7 @@ class ProductItemDisplay extends StatelessWidget {
               child: Hero(
                 tag: product.image,
                 child: Image.asset(
-                  product.image,
+                  product.assetImage,
                   height: 150,
                   fit: BoxFit.contain,
                 ),

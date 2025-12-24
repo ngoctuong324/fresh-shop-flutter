@@ -1,30 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:ui_web/common/constants.dart';
 
 class HomeHeader extends StatelessWidget {
-  const HomeHeader({super.key});
+  final String userName;
+
+  const HomeHeader({super.key, required this.userName});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        kDefaultPadding,
-        28,
-        kDefaultPadding,
-        0,
-      ),
+      padding: const EdgeInsets.fromLTRB(16, 28, 16, 0),
       child: Row(
         children: [
           RichText(
-            text: const TextSpan(
+            text: TextSpan(
               children: [
-                TextSpan(
+                const TextSpan(
                   text: "Welcome\n",
                   style: TextStyle(color: Colors.grey, fontSize: 18),
                 ),
                 TextSpan(
-                  text: "Ngọc Tường",
-                  style: TextStyle(
+                  text: userName,
+                  style: const TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
@@ -34,7 +30,6 @@ class HomeHeader extends StatelessWidget {
             ),
           ),
           const Spacer(),
-
           ClipOval(
             child: Image.asset(
               'assets/images/avatar.jpg',

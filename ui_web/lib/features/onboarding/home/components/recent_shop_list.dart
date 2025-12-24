@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:ui_web/common/constants.dart';
-import 'package:ui_web/data/model/product.dart';
+import '../home_controller.dart';
 
 class RecentShopList extends StatelessWidget {
   const RecentShopList({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final recentItems = productItems.where((e) => e.isRecent).toList();
+    final controller = context.watch<HomeController>();
+    final recentItems = controller.allProducts
+        .where((e) => e.isRecent)
+        .toList();
+
+    if (recentItems.isEmpty) {
+      return const SizedBox();
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,7 +52,7 @@ class RecentShopList extends StatelessWidget {
                             color: Colors.blue[50],
                             borderRadius: BorderRadius.circular(14),
                             image: DecorationImage(
-                              image: AssetImage(recent.image),
+                              image: AssetImage(recent.assetImage),
                               fit: BoxFit.contain,
                             ),
                           ),
