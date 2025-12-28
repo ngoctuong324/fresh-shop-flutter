@@ -14,7 +14,7 @@ class SearchBox extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
       child: Container(
         height: 56,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           color: Colors.white,
@@ -24,7 +24,7 @@ class SearchBox extends StatelessWidget {
           decoration: const InputDecoration(
             prefixIcon: Icon(Icons.search, color: Colors.grey),
             border: InputBorder.none,
-            hintText: "Search ...",
+            hintText: "Tìm kiếm sản phẩm...",
             isDense: true,
             contentPadding: EdgeInsets.symmetric(vertical: 20),
           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ui_web/common/constants.dart';
 import 'package:ui_web/features/cart/cart_controller.dart';
 import 'package:ui_web/features/cart/cart_screen.dart';
 
@@ -14,30 +15,38 @@ class HomeHeader extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 28, 16, 0),
       child: Row(
         children: [
-          RichText(
-            text: TextSpan(
-              children: [
-                const TextSpan(
-                  text: "Welcome\n",
-                  style: TextStyle(color: Colors.grey, fontSize: 18),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                "Welcome",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
-                TextSpan(
-                  text: userName,
-                  style: const TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                userName,
+                style: const TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: textGreen,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           const Spacer(),
 
           Stack(
             children: [
               IconButton(
-                icon: const Icon(Icons.shopping_cart_outlined, size: 30),
+                icon: const Icon(
+                  Icons.shopping_cart_outlined,
+                  size: 30,
+                  color: textGreen,
+                ),
                 onPressed: () {
                   Navigator.push(
                     context,

@@ -12,8 +12,9 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
+
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: textGreen,
         elevation: 0,
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -22,7 +23,6 @@ class CartScreen extends StatelessWidget {
           style: TextStyle(color: Colors.white, fontSize: 20),
         ),
       ),
-
       body: Consumer<CartController>(
         builder: (context, controller, _) {
           return Column(

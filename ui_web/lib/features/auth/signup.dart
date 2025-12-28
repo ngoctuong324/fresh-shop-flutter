@@ -14,11 +14,39 @@ class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
   final _authService = AuthService();
 
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController mailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  final nameController = TextEditingController();
+  final mailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   bool _isLoading = false;
+
+  String? validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Vui lòng nhập mật khẩu";
+    }
+
+    if (value.length < 8) {
+      return "Mật khẩu phải có ít nhất 8 ký tự";
+    }
+
+    if (!RegExp(r'[a-z]').hasMatch(value)) {
+      return "Mật khẩu phải có chữ thường (a-z)";
+    }
+
+    if (!RegExp(r'[A-Z]').hasMatch(value)) {
+      return "Mật khẩu phải có chữ in hoa (A-Z)";
+    }
+
+    if (!RegExp(r'[0-9]').hasMatch(value)) {
+      return "Mật khẩu phải có số (0-9)";
+    }
+
+    if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(value)) {
+      return "Mật khẩu phải có ký tự đặc biệt (!@#...)";
+    }
+
+    return null;
+  }
 
   Future<void> _register() async {
     if (_isLoading) return;
@@ -35,7 +63,6 @@ class _SignUpState extends State<SignUp> {
       if (user == null) throw Exception();
 
       await user.updateDisplayName(nameController.text.trim());
-      await user.reload();
 
       if (!mounted) return;
       Navigator.pushReplacement(
@@ -45,9 +72,7 @@ class _SignUpState extends State<SignUp> {
     } on FirebaseAuthException catch (e) {
       String message = "Đăng ký thất bại";
 
-      if (e.code == 'weak-password') {
-        message = "Mật khẩu quá yếu";
-      } else if (e.code == 'email-already-in-use') {
+      if (e.code == 'email-already-in-use') {
         message = "Email đã tồn tại";
       }
 
@@ -66,7 +91,7 @@ class _SignUpState extends State<SignUp> {
     String? Function(String?)? validator,
   }) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 30),
       decoration: BoxDecoration(
         color: const Color(0xFFedf0f8),
         borderRadius: BorderRadius.circular(30),
@@ -75,11 +100,7 @@ class _SignUpState extends State<SignUp> {
         controller: controller,
         obscureText: obscure,
         validator: validator,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: hint,
-          hintStyle: const TextStyle(color: Color(0xFFb2b7bf), fontSize: 18),
-        ),
+        decoration: InputDecoration(border: InputBorder.none, hintText: hint),
       ),
     );
   }
@@ -87,12 +108,11 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image.asset("assets/images/login.png", fit: BoxFit.cover),
-            const SizedBox(height: 17),
+            Image.asset("assets/images/login.png"),
+            const SizedBox(height: 20),
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 45),
@@ -107,7 +127,7 @@ class _SignUpState extends State<SignUp> {
                           v == null || v.isEmpty ? "Nhập tên" : null,
                     ),
 
-                    const SizedBox(height: 25),
+                    const SizedBox(height: 20),
 
                     _buildInput(
                       controller: mailController,
@@ -116,14 +136,13 @@ class _SignUpState extends State<SignUp> {
                           v == null || v.isEmpty ? "Nhập email" : null,
                     ),
 
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 20),
 
                     _buildInput(
                       controller: passwordController,
                       hint: "Password",
                       obscure: true,
-                      validator: (v) =>
-                          v == null || v.isEmpty ? "Nhập mật khẩu" : null,
+                      validator: validatePassword,
                     ),
 
                     const SizedBox(height: 25),
@@ -132,9 +151,9 @@ class _SignUpState extends State<SignUp> {
                       onTap: _register,
                       child: Container(
                         width: double.infinity,
-                        padding: const EdgeInsets.symmetric(vertical: 13),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
                         decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 55, 189, 55),
+                          color: Colors.green,
                           borderRadius: BorderRadius.circular(30),
                         ),
                         child: Center(
@@ -142,8 +161,7 @@ class _SignUpState extends State<SignUp> {
                             _isLoading ? "Signing up..." : "Sign Up",
                             style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 22,
-                              fontWeight: FontWeight.w500,
+                              fontSize: 20,
                             ),
                           ),
                         ),
@@ -170,7 +188,7 @@ class _SignUpState extends State<SignUp> {
                   child: const Text(
                     "Log In",
                     style: TextStyle(
-                      color: const Color.fromARGB(255, 55, 189, 55),
+                      color: Colors.green,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

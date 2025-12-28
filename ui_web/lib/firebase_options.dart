@@ -65,5 +65,4 @@ class DefaultFirebaseOptions {
     authDomain: 'fresh-shop-8b4eb.firebaseapp.com',
     storageBucket: 'fresh-shop-8b4eb.firebasestorage.app',
   );
-
 }

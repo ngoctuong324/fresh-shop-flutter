@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:ui_web/common/constants.dart';
 import 'package:ui_web/features/home/home_screen_grocery.dart';
+import 'package:ui_web/features/orders/order_screen.dart';
+import 'package:ui_web/features/profile/profile_screen.dart';
 
 class BottomNavigation extends StatefulWidget {
   const BottomNavigation({super.key});
@@ -12,18 +14,19 @@ class BottomNavigation extends StatefulWidget {
 
 class _BottomNavigationState extends State<BottomNavigation> {
   int _index = 0;
+
   final List<Widget> _pages = const [
     HomeScreenGrocery(),
-    Center(child: Text('Cart')),
-    Center(child: Text('Favorite')),
-    Center(child: Text('Profile')),
+    OrderScreen(),
+    ProfileScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
-      body: _pages[_index],
+
+      body: IndexedStack(index: _index, children: _pages),
 
       bottomNavigationBar: CurvedNavigationBar(
         index: _index,
@@ -34,14 +37,11 @@ class _BottomNavigationState extends State<BottomNavigation> {
         animationDuration: const Duration(milliseconds: 300),
         items: const [
           Icon(Icons.home, color: Colors.white),
-          Icon(Icons.shopping_cart_outlined, color: Colors.white),
-          Icon(Icons.favorite_border, color: Colors.white),
+          Icon(Icons.local_shipping, color: Colors.white),
           Icon(Icons.person_outline, color: Colors.white),
         ],
         onTap: (index) {
-          setState(() {
-            _index = index;
-          });
+          setState(() => _index = index);
         },
       ),
     );

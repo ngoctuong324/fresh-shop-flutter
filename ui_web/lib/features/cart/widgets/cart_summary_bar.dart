@@ -40,13 +40,13 @@ class CartSummaryBar extends StatelessWidget {
             onPressed: onCheckout,
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-              backgroundColor: Colors.green,
+              backgroundColor: textGreen,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
             ),
             child: const Text(
-              "Đặt Hàng",
+              "Mua Hàng",
               style: TextStyle(fontSize: 20, color: Colors.white),
             ),
           ),

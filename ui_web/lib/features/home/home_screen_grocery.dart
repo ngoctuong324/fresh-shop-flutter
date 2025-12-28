@@ -30,7 +30,7 @@ class HomeScreenGrocery extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               HomeHeader(userName: name),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
               const SearchBox(),
               const SizedBox(height: 20),
               const Expanded(
