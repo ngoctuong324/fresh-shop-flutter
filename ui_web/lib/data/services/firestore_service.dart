@@ -9,15 +9,16 @@ class FirestoreService {
 
     return snapshot.docs.map((doc) {
       final data = doc.data();
+
       return Product(
-        name: data['name'],
-        description: data['description'],
-        image: data['image'],
-        category: data['category'],
-        price: data['price'],
-        unit: data['unit'],
+        name: data['name'] ?? '',
+        description: data['description'] ?? '',
+        image: data['image'] ?? '',
+        category: data['category'] ?? '',
+        price: (data['price'] as num).toDouble(),
+        unit: data['unit'] ?? '',
         rate: (data['rate'] as num).toDouble(),
-        isRecent: data['isRecent'],
+        isRecent: data['isRecent'] ?? false,
       );
     }).toList();
   }

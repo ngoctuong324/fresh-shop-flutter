@@ -108,92 +108,101 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.white,
+      body: SafeArea(
         child: Column(
           children: [
-            Image.asset("assets/images/login.png"),
+            // Ảnh trên cùng
+            Flexible(
+              flex: 3,
+              child: Image.asset(
+                "assets/images/login.png",
+                fit: BoxFit.contain, // giữ ảnh đầy đủ
+                width: double.infinity,
+              ),
+            ),
+
             const SizedBox(height: 20),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 45),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    _buildInput(
-                      controller: nameController,
-                      hint: "Name",
-                      validator: (v) =>
-                          v == null || v.isEmpty ? "Nhập tên" : null,
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    _buildInput(
-                      controller: mailController,
-                      hint: "Email",
-                      validator: (v) =>
-                          v == null || v.isEmpty ? "Nhập email" : null,
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    _buildInput(
-                      controller: passwordController,
-                      hint: "Password",
-                      obscure: true,
-                      validator: validatePassword,
-                    ),
-
-                    const SizedBox(height: 25),
-
-                    GestureDetector(
-                      onTap: _register,
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: Center(
-                          child: Text(
-                            _isLoading ? "Signing up..." : "Sign Up",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
+            // Form + button
+            Flexible(
+              flex: 4,
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 45),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      _buildInput(
+                        controller: nameController,
+                        hint: "Name",
+                        validator: (v) =>
+                            v == null || v.isEmpty ? "Nhập tên" : null,
+                      ),
+                      const SizedBox(height: 20),
+                      _buildInput(
+                        controller: mailController,
+                        hint: "Email",
+                        validator: (v) =>
+                            v == null || v.isEmpty ? "Nhập email" : null,
+                      ),
+                      const SizedBox(height: 20),
+                      _buildInput(
+                        controller: passwordController,
+                        hint: "Password",
+                        obscure: true,
+                        validator: validatePassword,
+                      ),
+                      const SizedBox(height: 25),
+                      GestureDetector(
+                        onTap: _register,
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Center(
+                            child: Text(
+                              _isLoading ? "Signing up..." : "Sign Up",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 30),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text("Already have an account? "),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const LogIn()),
-                    );
-                  },
-                  child: const Text(
-                    "Log In",
-                    style: TextStyle(
-                      color: Colors.green,
-                      fontWeight: FontWeight.bold,
-                    ),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text("Already have an account? "),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const LogIn(),
+                                ),
+                              );
+                            },
+                            child: const Text(
+                              "Log In",
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
           ],
         ),

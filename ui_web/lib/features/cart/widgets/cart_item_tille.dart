@@ -24,6 +24,7 @@ class CartItemTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
             width: 80,
@@ -37,7 +38,6 @@ class CartItemTile extends StatelessWidget {
               color: Colors.yellow[100],
             ),
           ),
-
           const SizedBox(width: 12),
 
           Expanded(
@@ -46,29 +46,41 @@ class CartItemTile extends StatelessWidget {
               children: [
                 Text(
                   item.product.name,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
                 ),
-
                 const SizedBox(height: 4),
-
                 Text(
                   formatVND(item.product.price),
-                  style: TextStyle(color: Colors.grey[400]),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: Colors.grey[400], fontSize: 14),
                 ),
-
                 const SizedBox(height: 8),
 
                 Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     GestureDetector(
-                      onTap: () => onQuantityChanged(item.quantity - 1),
+                      onTap: () {
+                        if (item.quantity > 1) {
+                          onQuantityChanged(item.quantity - 1);
+                        }
+                      },
                       child: _quantityButton("-", Colors.grey[400]!),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Text(
                         item.quantity.toString(),
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
                     ),
                     GestureDetector(
@@ -80,8 +92,6 @@ class CartItemTile extends StatelessWidget {
               ],
             ),
           ),
-
-          const SizedBox(width: 12),
 
           IconButton(
             onPressed: onRemove,

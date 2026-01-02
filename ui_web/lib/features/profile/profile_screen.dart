@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ui_web/common/constants.dart';
+import 'package:ui_web/features/address/add_address_screen.dart';
 import 'package:ui_web/features/auth/login_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'widgets/profile_menu_item.dart';
 import 'edit_profile_screen.dart';
 
@@ -84,7 +86,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ProfileMenuItem(
                   icon: Icons.location_on_outlined,
                   title: "Địa chỉ nhận hàng",
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => AddAddressScreen()),
+                    );
+                  },
                 ),
               ],
             ),
@@ -95,12 +102,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ProfileMenuItem(
                   icon: Icons.phone_in_talk_outlined,
                   title: "Tư vấn: 0399 030 204",
-                  onTap: () {},
+                  onTap: () async {
+                    final Uri url = Uri(scheme: 'tel', path: '0399030204');
+                    if (await canLaunchUrl(url)) {
+                      await launchUrl(url);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Không thể mở điện thoại'),
+                        ),
+                      );
+                    }
+                  },
                 ),
+
                 ProfileMenuItem(
                   icon: Icons.error_outline,
                   title: "Khiếu nại: 0339 681 193",
-                  onTap: () {},
+                  onTap: () async {
+                    final Uri url = Uri(scheme: 'tel', path: '0339681193');
+                    if (await canLaunchUrl(url)) {
+                      await launchUrl(url);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Không thể mở điện thoại'),
+                        ),
+                      );
+                    }
+                  },
                 ),
               ],
             ),

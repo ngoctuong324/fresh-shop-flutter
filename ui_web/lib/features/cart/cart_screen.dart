@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ui_web/common/constants.dart';
 import 'package:ui_web/features/cart/cart_controller.dart';
+import 'package:ui_web/features/checkout/order_checkout_screen.dart';
 import 'widgets/cart_item_tille.dart';
 import 'widgets/cart_summary_bar.dart';
 
@@ -14,7 +15,7 @@ class CartScreen extends StatelessWidget {
       backgroundColor: backgroundColor,
 
       appBar: AppBar(
-        backgroundColor: textGreen,
+        backgroundColor: textGreen, 
         elevation: 0,
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -55,6 +56,13 @@ class CartScreen extends StatelessWidget {
                 totalPrice: controller.totalPrice,
                 onCheckout: () {
                   if (controller.isEmpty) return;
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const OrderCheckoutScreen(),
+                    ),
+                  );
                 },
               ),
             ],

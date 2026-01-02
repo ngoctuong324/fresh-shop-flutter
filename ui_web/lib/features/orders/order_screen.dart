@@ -1,5 +1,8 @@
+// lib/screens/order_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:ui_web/common/constants.dart';
+import 'package:ui_web/data/model/product_order.dart';
 
 class OrderScreen extends StatefulWidget {
   const OrderScreen({super.key});
@@ -19,8 +22,6 @@ class _OrderScreenState extends State<OrderScreen> {
     "Hủy đơn",
   ];
 
-  final List orders = [];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,14 +36,19 @@ class _OrderScreenState extends State<OrderScreen> {
         backgroundColor: textGreen,
         elevation: 0,
       ),
-
       body: Column(
         children: [
           _buildOrderTabs(),
           Expanded(
-            child: orders.isEmpty
-                ? _buildEmptyOrder()
-                : _buildOrderList(orders),
+            child: _selectedIndex == 2
+                ? ListView.builder(
+                    padding: const EdgeInsets.all(10),
+                    itemCount: ProductOrder.sampleOrders.length,
+                    itemBuilder: (_, index) => OrderItemWidget(
+                      order: ProductOrder.sampleOrders[index],
+                    ),
+                  )
+                : _buildEmptyOrder(),
           ),
         ],
       ),
@@ -55,17 +61,11 @@ class _OrderScreenState extends State<OrderScreen> {
       color: Colors.white,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
         child: Row(
           children: List.generate(_tabs.length, (index) {
             final selected = _selectedIndex == index;
-
             return GestureDetector(
-              onTap: () {
-                setState(() {
-                  _selectedIndex = index;
-                });
-              },
+              onTap: () => setState(() => _selectedIndex = index),
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 6),
                 padding: const EdgeInsets.symmetric(
@@ -80,7 +80,6 @@ class _OrderScreenState extends State<OrderScreen> {
                   _tabs[index],
                   style: TextStyle(
                     fontSize: 14,
-                    fontWeight: FontWeight.w500,
                     color: selected ? Colors.white : Colors.black87,
                   ),
                 ),
@@ -93,39 +92,78 @@ class _OrderScreenState extends State<OrderScreen> {
   }
 
   Widget _buildEmptyOrder() {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: const [
-          Icon(Icons.shopping_cart_outlined, size: 90, color: Colors.grey),
-          SizedBox(height: 16),
-          Text(
-            "Bạn chưa có đơn hàng nào!",
-            style: TextStyle(fontSize: 16, color: Colors.grey),
-          ),
-        ],
+    return const Center(
+      child: Text(
+        "Bạn chưa có đơn hàng nào!",
+        style: TextStyle(fontSize: 16, color: Colors.grey),
       ),
     );
   }
+}
 
-  Widget _buildOrderList(List orders) {
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: orders.length,
-      itemBuilder: (_, index) {
-        return Card(
-          margin: const EdgeInsets.only(bottom: 12),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+class OrderItemWidget extends StatelessWidget {
+  final ProductOrder order;
+  const OrderItemWidget({super.key, required this.order});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  image: DecorationImage(
+                    image: AssetImage(order.image),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      order.name,
+                      style: const TextStyle(color: Colors.green),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      "Số lượng: ${order.qty}",
+                      style: const TextStyle(color: Colors.black),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          child: ListTile(
-            leading: const Icon(Icons.receipt_long_outlined),
-            title: Text("Đơn hàng #${index + 1}"),
-            subtitle: const Text("Trạng thái: Đang xử lý"),
-            trailing: const Icon(Icons.chevron_right),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              const Text("Tổng số tiền: "),
+              Text(
+                order.price,
+                style: const TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 }

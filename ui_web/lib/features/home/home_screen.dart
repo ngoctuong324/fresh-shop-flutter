@@ -9,8 +9,8 @@ import 'widgets/category_bar.dart';
 import 'widgets/product_grid.dart';
 import 'widgets/recent_shop_list.dart';
 
-class HomeScreenGrocery extends StatelessWidget {
-  const HomeScreenGrocery({super.key});
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

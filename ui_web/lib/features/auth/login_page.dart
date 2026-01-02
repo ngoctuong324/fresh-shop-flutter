@@ -84,87 +84,94 @@ class _LogInState extends State<LogIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
+      body: SafeArea(
         child: Column(
           children: [
-            Image.asset("assets/images/login.png", fit: BoxFit.cover),
+            Flexible(
+              flex: 3,
+              child: Image.asset(
+                "assets/images/login.png",
+                fit: BoxFit.contain,
+                width: double.infinity,
+              ),
+            ),
 
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 45),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    _buildInput(
-                      controller: mailController,
-                      hint: "Email",
-                      validator: (v) =>
-                          v == null || v.isEmpty ? "Nhập email" : null,
-                    ),
-
-                    const SizedBox(height: 30),
-
-                    _buildInput(
-                      controller: passwordController,
-                      hint: "Password",
-                      obscure: true,
-                      validator: (v) =>
-                          v == null || v.isEmpty ? "Nhập mật khẩu" : null,
-                    ),
-
-                    const SizedBox(height: 30),
-
-                    GestureDetector(
-                      onTap: _login,
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(vertical: 13),
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 55, 189, 55),
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: Center(
-                          child: Text(
-                            _isLoading ? "Signing in..." : "Sign In",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 22,
-                              fontWeight: FontWeight.w500,
+            Flexible(
+              flex: 4,
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 45),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      _buildInput(
+                        controller: mailController,
+                        hint: "Email",
+                        validator: (v) =>
+                            v == null || v.isEmpty ? "Nhập email" : null,
+                      ),
+                      const SizedBox(height: 20),
+                      _buildInput(
+                        controller: passwordController,
+                        hint: "Password",
+                        obscure: true,
+                        validator: (v) =>
+                            v == null || v.isEmpty ? "Nhập mật khẩu" : null,
+                      ),
+                      const SizedBox(height: 30),
+                      GestureDetector(
+                        onTap: _login,
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(vertical: 13),
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 55, 189, 55),
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Center(
+                            child: Text(
+                              _isLoading ? "Signing in..." : "Sign In",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 22,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 30),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text("Don't have an account? "),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const SignUp()),
-                    );
-                  },
-                  child: const Text(
-                    "Sign Up",
-                    style: TextStyle(
-                      color: const Color.fromARGB(255, 55, 189, 55),
-                      fontWeight: FontWeight.bold,
-                    ),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text("Don't have an account? "),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const SignUp(),
+                                ),
+                              );
+                            },
+                            child: const Text(
+                              "Sign Up",
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 55, 189, 55),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
           ],
         ),

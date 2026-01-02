@@ -26,7 +26,7 @@ class SearchBox extends StatelessWidget {
             border: InputBorder.none,
             hintText: "Tìm kiếm sản phẩm...",
             isDense: true,
-            contentPadding: EdgeInsets.symmetric(vertical: 20),
+            contentPadding: EdgeInsets.symmetric(vertical: 15),
           ),
         ),
       ),

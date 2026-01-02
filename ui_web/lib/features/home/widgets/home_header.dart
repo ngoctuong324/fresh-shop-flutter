@@ -19,7 +19,7 @@ class HomeHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                "Welcome",
+                "Xin Chào",
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ui_web/data/model/product.dart';
+import 'package:ui_web/features/detail_products/widgets/add_to_cart_bar.dart';
 import 'widgets/product_header.dart';
 import 'widgets/product_info_section.dart';
-import 'widgets/add_to_cart_bar.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final Product product;
@@ -19,7 +19,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white,
       appBar: ProductHeader.appBar(context, widget.product),
       body: SingleChildScrollView(
         child: Column(
