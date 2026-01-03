@@ -19,6 +19,7 @@ class _LogInState extends State<LogIn> {
   final TextEditingController passwordController = TextEditingController();
 
   bool _isLoading = false;
+  bool _obscurePassword = true;
 
   Future<void> _login() async {
     if (_isLoading) return;
@@ -61,6 +62,7 @@ class _LogInState extends State<LogIn> {
     required String hint,
     bool obscure = false,
     String? Function(String?)? validator,
+    Widget? suffixIcon,
   }) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 30),
@@ -75,7 +77,8 @@ class _LogInState extends State<LogIn> {
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: hint,
-          hintStyle: const TextStyle(color: Color(0xFFb2b7bf), fontSize: 18),
+          hintStyle: const TextStyle(color: Colors.black, fontSize: 18),
+          suffixIcon: suffixIcon,
         ),
       ),
     );
@@ -97,9 +100,7 @@ class _LogInState extends State<LogIn> {
                 width: double.infinity,
               ),
             ),
-
             const SizedBox(height: 20),
-
             Flexible(
               flex: 4,
               child: SingleChildScrollView(
@@ -115,14 +116,29 @@ class _LogInState extends State<LogIn> {
                             v == null || v.isEmpty ? "Nhập email" : null,
                       ),
                       const SizedBox(height: 20),
+
                       _buildInput(
                         controller: passwordController,
                         hint: "Password",
-                        obscure: true,
+                        obscure: _obscurePassword,
                         validator: (v) =>
                             v == null || v.isEmpty ? "Nhập mật khẩu" : null,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: Colors.black,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                        ),
                       ),
                       const SizedBox(height: 30),
+
                       GestureDetector(
                         onTap: _login,
                         child: Container(
@@ -134,7 +150,7 @@ class _LogInState extends State<LogIn> {
                           ),
                           child: Center(
                             child: Text(
-                              _isLoading ? "Signing in..." : "Sign In",
+                              _isLoading ? "ĐANG ĐĂNG NHẬP..." : "ĐĂNG NHẬP",
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 22,
@@ -145,6 +161,7 @@ class _LogInState extends State<LogIn> {
                         ),
                       ),
                       const SizedBox(height: 20),
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

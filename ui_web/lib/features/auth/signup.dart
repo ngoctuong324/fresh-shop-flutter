@@ -17,34 +17,41 @@ class _SignUpState extends State<SignUp> {
   final nameController = TextEditingController();
   final mailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   bool _isLoading = false;
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
 
   String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return "Vui lòng nhập mật khẩu";
     }
-
     if (value.length < 8) {
       return "Mật khẩu phải có ít nhất 8 ký tự";
     }
-
     if (!RegExp(r'[a-z]').hasMatch(value)) {
       return "Mật khẩu phải có chữ thường (a-z)";
     }
-
     if (!RegExp(r'[A-Z]').hasMatch(value)) {
       return "Mật khẩu phải có chữ in hoa (A-Z)";
     }
-
     if (!RegExp(r'[0-9]').hasMatch(value)) {
       return "Mật khẩu phải có số (0-9)";
     }
-
     if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(value)) {
       return "Mật khẩu phải có ký tự đặc biệt (!@#...)";
     }
+    return null;
+  }
 
+  String? validateConfirmPassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Vui lòng nhập lại mật khẩu";
+    }
+    if (value != passwordController.text) {
+      return "Mật khẩu không khớp";
+    }
     return null;
   }
 
@@ -71,11 +78,9 @@ class _SignUpState extends State<SignUp> {
       );
     } on FirebaseAuthException catch (e) {
       String message = "Đăng ký thất bại";
-
       if (e.code == 'email-already-in-use') {
         message = "Email đã tồn tại";
       }
-
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(message)));
@@ -89,6 +94,7 @@ class _SignUpState extends State<SignUp> {
     required String hint,
     bool obscure = false,
     String? Function(String?)? validator,
+    Widget? suffixIcon,
   }) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -100,7 +106,12 @@ class _SignUpState extends State<SignUp> {
         controller: controller,
         obscureText: obscure,
         validator: validator,
-        decoration: InputDecoration(border: InputBorder.none, hintText: hint),
+        style: const TextStyle(color: Colors.black, fontSize: 18),
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: hint,
+          suffixIcon: suffixIcon,
+        ),
       ),
     );
   }
@@ -113,19 +124,16 @@ class _SignUpState extends State<SignUp> {
       body: SafeArea(
         child: Column(
           children: [
-            // Ảnh trên cùng
             Flexible(
               flex: 3,
               child: Image.asset(
                 "assets/images/login.png",
-                fit: BoxFit.contain, // giữ ảnh đầy đủ
+                fit: BoxFit.contain,
                 width: double.infinity,
               ),
             ),
-
             const SizedBox(height: 20),
 
-            // Form + button
             Flexible(
               flex: 4,
               child: SingleChildScrollView(
@@ -141,6 +149,7 @@ class _SignUpState extends State<SignUp> {
                             v == null || v.isEmpty ? "Nhập tên" : null,
                       ),
                       const SizedBox(height: 20),
+
                       _buildInput(
                         controller: mailController,
                         hint: "Email",
@@ -148,13 +157,48 @@ class _SignUpState extends State<SignUp> {
                             v == null || v.isEmpty ? "Nhập email" : null,
                       ),
                       const SizedBox(height: 20),
+
                       _buildInput(
                         controller: passwordController,
                         hint: "Password",
-                        obscure: true,
+                        obscure: _obscurePassword,
                         validator: validatePassword,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+
+                      _buildInput(
+                        controller: confirmPasswordController,
+                        hint: "Confirm Password",
+                        obscure: _obscureConfirmPassword,
+                        validator: validateConfirmPassword,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureConfirmPassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscureConfirmPassword =
+                                  !_obscureConfirmPassword;
+                            });
+                          },
+                        ),
                       ),
                       const SizedBox(height: 25),
+
                       GestureDetector(
                         onTap: _register,
                         child: Container(
@@ -166,7 +210,7 @@ class _SignUpState extends State<SignUp> {
                           ),
                           child: Center(
                             child: Text(
-                              _isLoading ? "Signing up..." : "Sign Up",
+                              _isLoading ? "ĐANG ĐĂNG KÝ..." : "ĐĂNG KÝ",
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -176,6 +220,7 @@ class _SignUpState extends State<SignUp> {
                         ),
                       ),
                       const SizedBox(height: 20),
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

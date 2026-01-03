@@ -45,86 +45,89 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
 
                 final docs = snapshot.data!.docs;
 
-                if (docs.isEmpty) {
-                  return const Center(child: Text("Chưa có địa chỉ nào"));
-                }
-
                 return Column(
                   children: [
                     Expanded(
-                      child: ListView.builder(
-                        padding: const EdgeInsets.all(12),
-                        itemCount: docs.length,
-                        itemBuilder: (context, index) {
-                          final address = ShippingAddressModel.fromMap(
-                            docs[index].data() as Map<String, dynamic>,
-                          );
-
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context, address);
-                            },
-                            child: Card(
-                              margin: const EdgeInsets.only(bottom: 12),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
+                      child: docs.isEmpty
+                          ? const Center(
+                              child: Text(
+                                "Bạn chưa có địa chỉ nào",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black54,
+                                ),
                               ),
-                              elevation: 2,
-                              child: Padding(
-                                padding: const EdgeInsets.all(12),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                        color: textGreen.withOpacity(0.1),
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Icon(
-                                        Icons.location_on,
-                                        color: textGreen,
-                                      ),
+                            )
+                          : ListView.builder(
+                              padding: const EdgeInsets.all(12),
+                              itemCount: docs.length,
+                              itemBuilder: (context, index) {
+                                final address = ShippingAddressModel.fromMap(
+                                  docs[index].data() as Map<String, dynamic>,
+                                );
+
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.pop(context, address);
+                                  },
+                                  child: Card(
+                                    margin: const EdgeInsets.only(bottom: 12),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
-
-                                    const SizedBox(width: 12),
-
-                                    Expanded(
-                                      child: Column(
+                                    elevation: 2,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(12),
+                                      child: Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            "${address.fullName} - ${address.phone}",
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15,
+                                          Container(
+                                            padding: const EdgeInsets.all(10),
+                                            decoration: BoxDecoration(
+                                              color: textGreen.withOpacity(0.1),
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: Icon(
+                                              Icons.location_on,
                                               color: textGreen,
                                             ),
                                           ),
-                                          const SizedBox(height: 6),
-                                          Text(
-                                            "${address.detail}, ${address.ward}, ${address.district}, ${address.province}",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              height: 1.4,
+
+                                          const SizedBox(width: 12),
+
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "${address.fullName} - ${address.phone}",
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 15,
+                                                    color: textGreen,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 6),
+                                                Text(
+                                                  "${address.detail}, ${address.ward}, ${address.district}, ${address.province}",
+                                                  style: const TextStyle(
+                                                    height: 1.4,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
+
+                                          const Icon(Icons.chevron_right),
                                         ],
                                       ),
                                     ),
-
-                                    const Icon(
-                                      Icons.chevron_right,
-                                      color: Colors.black,
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
                     ),
 
                     Padding(

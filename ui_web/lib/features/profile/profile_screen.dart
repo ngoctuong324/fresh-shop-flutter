@@ -5,7 +5,7 @@ import 'package:ui_web/features/address/add_address_screen.dart';
 import 'package:ui_web/features/auth/login_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'widgets/profile_menu_item.dart';
-import 'edit_profile_screen.dart';
+import 'edit_profile/edit_profile_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
