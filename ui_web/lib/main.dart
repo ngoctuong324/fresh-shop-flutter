@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:ui_web/features/auth/login_page.dart';
-// import 'package:ui_web/features/address/add_address_screen.dart';
-// import 'package:ui_web/features/auth/login_page.dart';
 import 'package:ui_web/features/cart/cart_controller.dart';
 import 'package:ui_web/features/home/home_controller.dart';
-// import 'package:ui_web/features/home/home_screen_grocery.dart';
-// import 'package:ui_web/features/profile/profile_screen.dart';
-// import 'package:ui_web/features/orders/order_screen.dart';
+import 'package:ui_web/features/checkout/place_order_controller.dart';
+import 'package:ui_web/features/orders/order_controller.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -20,6 +17,8 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => CartController()),
         ChangeNotifierProvider(create: (_) => HomeController()),
+        ChangeNotifierProvider(create: (_) => PlaceOrderController()),
+        ChangeNotifierProvider(create: (_) => OrderController()),
       ],
       child: const MyApp(),
     ),

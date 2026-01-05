@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../model/product.dart';
+import 'package:ui_web/data/model/product.dart';
 
 class FirestoreService {
   final _db = FirebaseFirestore.instance;
@@ -11,6 +11,7 @@ class FirestoreService {
       final data = doc.data();
 
       return Product(
+        id: doc.id,
         name: data['name'] ?? '',
         description: data['description'] ?? '',
         image: data['image'] ?? '',

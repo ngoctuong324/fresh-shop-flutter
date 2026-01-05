@@ -1,34 +1,28 @@
-class ProductOrder {
+class OrderProduct {
+  final String? productId;
   final String name;
-  final String qty;
-  final String price;
-  final String image;
+  final double price;
+  final int quantity;
+  final double totalPrice;
+  final String? image;
 
-  ProductOrder({
+  OrderProduct({
+    this.productId,
     required this.name,
-    required this.qty,
     required this.price,
-    required this.image,
+    required this.quantity,
+    required this.totalPrice,
+    this.image,
   });
 
-  static List<ProductOrder> sampleOrders = [
-    ProductOrder(
-      name: "Nước Ép Thơm",
-      qty: "01",
-      price: "30.000 VNĐ",
-      image: "assets/images/nuoc-ep-thom.jpg",
-    ),
-    ProductOrder(
-      name: "Sườn Cừu",
-      qty: "01",
-      price: "735.000 VNĐ",
-      image: "assets/images/suon-cuu.png",
-    ),
-    ProductOrder(
-      name: "Nước Ép Cà Rốt",
-      qty: "01",
-      price: "220.000 VNĐ",
-      image: "assets/images/nuoc-ep-ca-rot.jpg",
-    ),
-  ];
+  factory OrderProduct.fromMap(Map<String, dynamic> map) {
+    return OrderProduct(
+      productId: map['productId'] as String?,
+      name: map['name'] as String? ?? '',
+      price: (map['price'] as num?)?.toDouble() ?? 0,
+      quantity: map['quantity'] as int? ?? 1,
+      totalPrice: (map['totalPrice'] as num?)?.toDouble() ?? 0,
+      image: map['image'] as String? ?? 'default.png',
+    );
+  }
 }

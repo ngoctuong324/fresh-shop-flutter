@@ -1,4 +1,5 @@
 class Product {
+  final String id;
   final String name;
   final String description;
   final String image;
@@ -10,6 +11,7 @@ class Product {
   final bool isRecent;
 
   Product({
+    required this.id,
     required this.name,
     required this.description,
     required this.image,
@@ -19,4 +21,18 @@ class Product {
     required this.rate,
     required this.isRecent,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'image': image,
+      'category': category,
+      'price': price,
+      'unit': unit,
+      'rate': rate,
+      'isRecent': isRecent,
+    };
+  }
 }

@@ -7,11 +7,18 @@ class CartItemTile extends StatelessWidget {
   final ValueChanged<int> onQuantityChanged;
   final VoidCallback onRemove;
 
+  final bool isSelectable;
+  final bool isSelected;
+  final ValueChanged<bool?>? onSelectedChanged;
+
   const CartItemTile({
     super.key,
     required this.item,
     required this.onQuantityChanged,
     required this.onRemove,
+    this.isSelectable = false,
+    this.isSelected = false,
+    this.onSelectedChanged,
   });
 
   @override
@@ -22,10 +29,24 @@ class CartItemTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade200,
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          if (isSelectable)
+            Checkbox(
+              value: isSelected,
+              onChanged: onSelectedChanged,
+              activeColor: Colors.green,
+            ),
+
           Container(
             width: 80,
             height: 80,
@@ -61,15 +82,13 @@ class CartItemTile extends StatelessWidget {
                   style: TextStyle(color: Colors.grey[400], fontSize: 14),
                 ),
                 const SizedBox(height: 8),
-
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     GestureDetector(
                       onTap: () {
-                        if (item.quantity > 1) {
-                          onQuantityChanged(item.quantity - 1);
-                        }
+                        final newQuantity = item.quantity - 1;
+                        onQuantityChanged(newQuantity);
                       },
                       child: _quantityButton("-", Colors.grey[400]!),
                     ),

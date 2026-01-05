@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:ui_web/common/constants.dart';
 import 'package:ui_web/features/auth/auth_service.dart';
 import 'package:ui_web/features/auth/login_page.dart';
 
@@ -24,41 +25,27 @@ class _SignUpState extends State<SignUp> {
   bool _obscureConfirmPassword = true;
 
   String? validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return "Vui lòng nhập mật khẩu";
-    }
-    if (value.length < 8) {
-      return "Mật khẩu phải có ít nhất 8 ký tự";
-    }
-    if (!RegExp(r'[a-z]').hasMatch(value)) {
+    if (value == null || value.isEmpty) return "Vui lòng nhập mật khẩu";
+    if (value.length < 8) return "Mật khẩu phải có ít nhất 8 ký tự";
+    if (!RegExp(r'[a-z]').hasMatch(value))
       return "Mật khẩu phải có chữ thường (a-z)";
-    }
-    if (!RegExp(r'[A-Z]').hasMatch(value)) {
+    if (!RegExp(r'[A-Z]').hasMatch(value))
       return "Mật khẩu phải có chữ in hoa (A-Z)";
-    }
-    if (!RegExp(r'[0-9]').hasMatch(value)) {
-      return "Mật khẩu phải có số (0-9)";
-    }
-    if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(value)) {
+    if (!RegExp(r'[0-9]').hasMatch(value)) return "Mật khẩu phải có số (0-9)";
+    if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(value))
       return "Mật khẩu phải có ký tự đặc biệt (!@#...)";
-    }
     return null;
   }
 
   String? validateConfirmPassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return "Vui lòng nhập lại mật khẩu";
-    }
-    if (value != passwordController.text) {
-      return "Mật khẩu không khớp";
-    }
+    if (value == null || value.isEmpty) return "Vui lòng nhập lại mật khẩu";
+    if (value != passwordController.text) return "Mật khẩu không khớp";
     return null;
   }
 
   Future<void> _register() async {
     if (_isLoading) return;
     if (!_formKey.currentState!.validate()) return;
-
     setState(() => _isLoading = true);
 
     try {
@@ -66,9 +53,7 @@ class _SignUpState extends State<SignUp> {
         email: mailController.text.trim(),
         password: passwordController.text.trim(),
       );
-
       if (user == null) throw Exception();
-
       await user.updateDisplayName(nameController.text.trim());
 
       if (!mounted) return;
@@ -77,180 +62,226 @@ class _SignUpState extends State<SignUp> {
         MaterialPageRoute(builder: (_) => const LogIn()),
       );
     } on FirebaseAuthException catch (e) {
-      String message = "Đăng ký thất bại";
-      if (e.code == 'email-already-in-use') {
-        message = "Email đã tồn tại";
-      }
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
+      String message = e.code == 'email-already-in-use'
+          ? "Email đã tồn tại"
+          : "Đăng ký thất bại";
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: Colors.redAccent,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
   }
 
-  Widget _buildInput({
-    required TextEditingController controller,
-    required String hint,
-    bool obscure = false,
-    String? Function(String?)? validator,
-    Widget? suffixIcon,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
-      decoration: BoxDecoration(
-        color: const Color(0xFFedf0f8),
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: TextFormField(
-        controller: controller,
-        obscureText: obscure,
-        validator: validator,
-        style: const TextStyle(color: Colors.black, fontSize: 18),
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: hint,
-          suffixIcon: suffixIcon,
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Flexible(
-              flex: 3,
-              child: Image.asset(
-                "assets/images/login.png",
-                fit: BoxFit.contain,
-                width: double.infinity,
-              ),
+      body: Stack(
+        children: [
+          Positioned(
+            top: -60,
+            left: -60,
+            child: CircleAvatar(
+              radius: 120,
+              backgroundColor: accentGreen.withOpacity(0.3),
             ),
-            const SizedBox(height: 20),
+          ),
 
-            Flexible(
-              flex: 4,
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 45),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      _buildInput(
-                        controller: nameController,
-                        hint: "Name",
-                        validator: (v) =>
-                            v == null || v.isEmpty ? "Nhập tên" : null,
+          SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
+                    IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      "Đăng Ký",
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF2E7D32),
                       ),
-                      const SizedBox(height: 20),
+                    ),
+                    Text(
+                      "Tạo tài khoản để trải nghiệm thực phẩm sạch",
+                      style: TextStyle(fontSize: 16, color: Colors.grey[500]),
+                    ),
+                    const SizedBox(height: 30),
 
-                      _buildInput(
-                        controller: mailController,
-                        hint: "Email",
-                        validator: (v) =>
-                            v == null || v.isEmpty ? "Nhập email" : null,
-                      ),
-                      const SizedBox(height: 20),
+                    _buildModernInput(
+                      controller: nameController,
+                      hint: "Họ và tên",
+                      icon: Icons.person_outline_rounded,
+                      validator: (v) =>
+                          v == null || v.isEmpty ? "Nhập tên" : null,
+                    ),
+                    const SizedBox(height: 15),
 
-                      _buildInput(
-                        controller: passwordController,
-                        hint: "Password",
-                        obscure: _obscurePassword,
-                        validator: validatePassword,
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscurePassword
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _obscurePassword = !_obscurePassword;
-                            });
-                          },
+                    _buildModernInput(
+                      controller: mailController,
+                      hint: "Email",
+                      icon: Icons.email_outlined,
+                      validator: (v) =>
+                          v == null || v.isEmpty ? "Nhập email" : null,
+                    ),
+                    const SizedBox(height: 15),
+
+                    _buildModernInput(
+                      controller: passwordController,
+                      hint: "Mật khẩu",
+                      icon: Icons.lock_outline_rounded,
+                      obscure: _obscurePassword,
+                      validator: validatePassword,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () => setState(
+                          () => _obscurePassword = !_obscurePassword,
                         ),
                       ),
-                      const SizedBox(height: 20),
+                    ),
+                    const SizedBox(height: 15),
 
-                      _buildInput(
-                        controller: confirmPasswordController,
-                        hint: "Confirm Password",
-                        obscure: _obscureConfirmPassword,
-                        validator: validateConfirmPassword,
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscureConfirmPassword
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _obscureConfirmPassword =
-                                  !_obscureConfirmPassword;
-                            });
-                          },
+                    _buildModernInput(
+                      controller: confirmPasswordController,
+                      hint: "Xác nhận mật khẩu",
+                      icon: Icons.lock_reset_rounded,
+                      obscure: _obscureConfirmPassword,
+                      validator: validateConfirmPassword,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscureConfirmPassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () => setState(
+                          () => _obscureConfirmPassword =
+                              !_obscureConfirmPassword,
                         ),
                       ),
-                      const SizedBox(height: 25),
+                    ),
+                    const SizedBox(height: 35),
 
-                      GestureDetector(
-                        onTap: _register,
-                        child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          decoration: BoxDecoration(
-                            color: Colors.green,
-                            borderRadius: BorderRadius.circular(30),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 55,
+                      child: ElevatedButton(
+                        onPressed: _register,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: primaryGreen,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
                           ),
-                          child: Center(
-                            child: Text(
-                              _isLoading ? "ĐANG ĐĂNG KÝ..." : "ĐĂNG KÝ",
-                              style: const TextStyle(
+                          elevation: 8,
+                          shadowColor: primaryGreen.withOpacity(0.4),
+                        ),
+                        child: _isLoading
+                            ? const CircularProgressIndicator(
                                 color: Colors.white,
-                                fontSize: 20,
+                              )
+                            : const Text(
+                                "TẠO TÀI KHOẢN",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.2,
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
                       ),
-                      const SizedBox(height: 20),
+                    ),
+                    const SizedBox(height: 30),
 
-                      Row(
+                    Center(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text("Already have an account? "),
+                          const Text(
+                            "Đã có tài khoản? ",
+                            style: TextStyle(fontSize: 15),
+                          ),
                           GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const LogIn(),
-                                ),
-                              );
-                            },
-                            child: const Text(
-                              "Log In",
+                            onTap: () => Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (_) => const LogIn()),
+                            ),
+                            child: Text(
+                              "Đăng nhập",
                               style: TextStyle(
-                                color: Colors.green,
+                                color: primaryGreen,
                                 fontWeight: FontWeight.bold,
+                                fontSize: 15,
                               ),
                             ),
                           ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 20),
+                  ],
                 ),
               ),
             ),
-          ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildModernInput({
+    required TextEditingController controller,
+    required String hint,
+    required IconData icon,
+    bool obscure = false,
+    String? Function(String?)? validator,
+    Widget? suffixIcon,
+  }) {
+    return TextFormField(
+      controller: controller,
+      obscureText: obscure,
+      validator: validator,
+      style: const TextStyle(fontSize: 16),
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: TextStyle(color: Colors.grey[400], fontSize: 15),
+        prefixIcon: Icon(icon, color: primaryGreen, size: 22),
+        suffixIcon: suffixIcon,
+        filled: true,
+        fillColor: const Color(0xFFF1F8E9),
+        contentPadding: const EdgeInsets.symmetric(vertical: 18),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide.none,
         ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: Colors.transparent),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(
+            color: primaryGreen.withOpacity(0.5),
+            width: 1.5,
+          ),
+        ),
+        errorStyle: const TextStyle(height: 1),
       ),
     );
   }

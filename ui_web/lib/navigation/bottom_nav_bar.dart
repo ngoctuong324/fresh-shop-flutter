@@ -7,7 +7,6 @@ import 'package:ui_web/features/profile/profile_screen.dart';
 
 class BottomNavigation extends StatefulWidget {
   final int initialIndex;
-
   const BottomNavigation({super.key, this.initialIndex = 0});
 
   @override
@@ -17,10 +16,10 @@ class BottomNavigation extends StatefulWidget {
 class _BottomNavigationState extends State<BottomNavigation> {
   late int _index;
 
-  final List<Widget> _pages = const [
-    HomeScreen(),
+  final List<Widget> _pages = [
+    const HomeScreen(),
     OrderScreen(),
-    ProfileScreen(),
+    const ProfileScreen(),
   ];
 
   @override
@@ -46,9 +45,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
           Icon(Icons.local_shipping, color: Colors.white),
           Icon(Icons.person_outline, color: Colors.white),
         ],
-        onTap: (index) {
-          setState(() => _index = index);
-        },
+        onTap: (index) => setState(() => _index = index),
       ),
     );
   }

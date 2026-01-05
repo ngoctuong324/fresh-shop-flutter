@@ -1,8 +1,11 @@
-// lib/screens/order_screen.dart
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:ui_web/common/constants.dart';
-import 'package:ui_web/data/model/product_order.dart';
+import 'package:ui_web/features/orders/order_controller.dart';
+import 'package:ui_web/features/orders/widgets/order_item_widget.dart';
+import 'package:ui_web/features/orders/widgets/order_tab.dart';
 
 class OrderScreen extends StatefulWidget {
   const OrderScreen({super.key});
@@ -22,8 +25,22 @@ class _OrderScreenState extends State<OrderScreen> {
     "Hủy đơn",
   ];
 
+  final Map<int, String> _statusMapping = {
+    1: 'pending',
+    2: 'shipping',
+    3: 'delivered',
+    4: 'cancel',
+  };
+
   @override
   Widget build(BuildContext context) {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) {
+      return const Scaffold(body: Center(child: Text("Bạn chưa đăng nhập!")));
+    }
+
+    final orderController = Provider.of<OrderController>(context);
+
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
@@ -38,129 +55,79 @@ class _OrderScreenState extends State<OrderScreen> {
       ),
       body: Column(
         children: [
-          _buildOrderTabs(),
+          OrderTab(
+            tabs: _tabs,
+            selectedIndex: _selectedIndex,
+            onTap: (index) => setState(() => _selectedIndex = index),
+          ),
           Expanded(
-            child: _selectedIndex == 2
-                ? ListView.builder(
-                    padding: const EdgeInsets.all(10),
-                    itemCount: ProductOrder.sampleOrders.length,
-                    itemBuilder: (_, index) => OrderItemWidget(
-                      order: ProductOrder.sampleOrders[index],
+            child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+              stream: orderController.getOrdersStream(userId),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Text(
+                        "Lỗi truy vấn: ${snapshot.error}\n\nLưu ý: Nếu lỗi 'FAILED_PRECONDITION', hãy nhấn vào link trong Debug Console để tạo Index.",
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: Colors.red),
+                      ),
                     ),
-                  )
-                : _buildEmptyOrder(),
-          ),
-        ],
-      ),
-    );
-  }
+                  );
+                }
 
-  Widget _buildOrderTabs() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      color: Colors.white,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: List.generate(_tabs.length, (index) {
-            final selected = _selectedIndex == index;
-            return GestureDetector(
-              onTap: () => setState(() => _selectedIndex = index),
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 6),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  color: selected ? textGreen : Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  _tabs[index],
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: selected ? Colors.white : Colors.black87,
-                  ),
-                ),
-              ),
-            );
-          }),
-        ),
-      ),
-    );
-  }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-  Widget _buildEmptyOrder() {
-    return const Center(
-      child: Text(
-        "Bạn chưa có đơn hàng nào!",
-        style: TextStyle(fontSize: 16, color: Colors.grey),
-      ),
-    );
-  }
-}
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return const Center(child: Text("Bạn chưa có đơn hàng nào!"));
+                }
 
-class OrderItemWidget extends StatelessWidget {
-  final ProductOrder order;
-  const OrderItemWidget({super.key, required this.order});
+                final filteredOrders = snapshot.data!.docs.where((doc) {
+                  if (_selectedIndex == 0) return true;
+                  final status = (doc.data()['status'] ?? '')
+                      .toString()
+                      .toLowerCase();
+                  final filterStatus = (_statusMapping[_selectedIndex] ?? '')
+                      .toLowerCase();
+                  return status == filterStatus;
+                }).toList();
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4),
-                  image: DecorationImage(
-                    image: AssetImage(order.image),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      order.name,
-                      style: const TextStyle(color: Colors.green),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      "Số lượng: ${order.qty}",
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              const Text("Tổng số tiền: "),
-              Text(
-                order.price,
-                style: const TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
+                if (filteredOrders.isEmpty) {
+                  return const Center(
+                    child: Text("Không có đơn hàng nào ở mục này!"),
+                  );
+                }
+
+                return ListView.builder(
+                  padding: const EdgeInsets.all(10),
+                  itemCount: filteredOrders.length,
+                  itemBuilder: (context, index) {
+                    final orderData = filteredOrders[index].data();
+                    final productsData =
+                        (orderData['products'] as List<dynamic>?) ?? [];
+                    final products = orderController.parseProducts(
+                      productsData,
+                    );
+                    final address =
+                        orderData['address'] as Map<String, dynamic>? ?? {};
+                    final totalPrice =
+                        (orderData['totalPrice'] as num?)?.toDouble() ?? 0;
+                    final status = orderData['status'] as String? ?? '';
+
+                    return OrderItemWidget(
+                      orderId: filteredOrders[index].id,
+                      products: products,
+                      address: address,
+                      totalPrice: totalPrice,
+                      status: status,
+                    );
+                  },
+                );
+              },
+            ),
           ),
         ],
       ),
